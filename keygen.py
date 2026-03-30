@@ -1,0 +1,22 @@
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+
+def generate_keys(name):
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    # Simpan Private Key
+    with open(f"{name}_private.pem", "wb") as f:
+        f.write(private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        ))
+    # Simpan Public Key
+    with open(f"{name}_public.pem", "wb") as f:
+        f.write(private_key.public_key().public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ))
+
+generate_keys("alice")
+generate_keys("bob")
+print("Kunci RSA untuk Alice dan Bob berhasil dibuat.")
