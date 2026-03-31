@@ -55,8 +55,7 @@ class BobGUI:
                 padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
             )
             self.log("[STEP 1] AES Key berhasil didekripsi menggunakan Private Key Bob.")
-            print(aes_key)
-
+            
             # 2. Decrypt Ciphertext
             ciphertext = base64.b64decode(payload['ciphertext'])
             iv = base64.b64decode(payload['iv'])
@@ -73,8 +72,8 @@ class BobGUI:
             digest = hashes.Hash(hashes.SHA256())
             digest.update(plaintext)
             local_hash = digest.finalize()
-            print(f"Hash yang dihitung Bob untuk Verifikasi: {local_hash}")
-            print(f"Hash yang diterima Bob dari Alice: {received_hash}")
+            print(f"Hash yang dihitung Bob untuk Verifikasi: {base64.b64encode(local_hash).decode()}")
+            print(f"Hash yang diterima Bob dari Alice: {base64.b64encode(received_hash).decode()}")
             
             hash_status = "VALID ✅" if local_hash == received_hash else "INVALID ❌"
             self.log(f"[STEP 3] Integritas Pesan (Hash): {hash_status}")
