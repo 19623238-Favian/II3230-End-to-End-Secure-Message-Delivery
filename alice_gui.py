@@ -6,6 +6,7 @@ from tkinter import scrolledtext
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from pprint import pprint
 import os
 
 class AliceGUI:
@@ -14,13 +15,13 @@ class AliceGUI:
         self.root.title("Alice - Secure Sender")
         
         # IP Alice
-        self.own_ip = "192.168.1.20"
+        self.own_ip = "10.79.89.68"
 
         # IP Bob
         tk.Label(root, text="IP Bob:").pack(pady=2)
         self.entry_ip = tk.Entry(root, width=15)
         self.entry_ip.pack(pady=2)
-        self.entry_ip.insert(0, "192.168.1.10")  # disesuaikan dalam percobaan
+        self.entry_ip.insert(0, "10.79.89.12")  # disesuaikan dalam percobaan
 
         # UI Elements
         tk.Label(root, text="Pesan Plaintext:").pack(pady=5)
@@ -100,6 +101,7 @@ class AliceGUI:
                 s.sendall(json.dumps(payload).encode())
 
             self.log("\n[SUCCESS] Payload berhasil dikirim ke IP Bob!")
+            pprint(payload)
 
         except Exception as e:
             self.log(f"\n[ERROR] {str(e)}")
