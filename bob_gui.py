@@ -13,6 +13,8 @@ class BobGUI:
         self.root = root
         self.root.title("Bob - Secure Receiver")
 
+        self.ip = "???"
+
         tk.Label(root, text="Pesan Masuk (Log Verifikasi):").pack(pady=5)
         self.log_area = scrolledtext.ScrolledText(root, width=65, height=25)
         self.log_area.pack(pady=5)
@@ -41,7 +43,7 @@ class BobGUI:
     def process_incoming(self, raw_data):
         try:
             payload = json.loads(raw_data.decode())
-            self.log("\n--- DATA DITERIMA DARI ALICE ---")
+            self.log(f"\n--- DATA DITERIMA DARI ALICE {payload['source_ip']} ---")
 
             # 1. Decrypt AES Key
             with open("bob_private.pem", "rb") as f:

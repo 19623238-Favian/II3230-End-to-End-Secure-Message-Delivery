@@ -13,6 +13,15 @@ class AliceGUI:
         self.root = root
         self.root.title("Alice - Secure Sender")
         
+        # IP Alice
+        self.own_ip = "192.168.1.20"
+
+        # IP Bob
+        tk.Label(root, text="IP Bob:").pack(pady=2)
+        self.entry_ip = tk.Entry(root, width=15)
+        self.entry_ip.pack(pady=2)
+        self.entry_ip.insert(0, "192.168.1.10")  # disesuaikan dalam percobaan
+
         # UI Elements
         tk.Label(root, text="Pesan Plaintext:").pack(pady=5)
         self.entry_msg = tk.Entry(root, width=50)
@@ -33,6 +42,7 @@ class AliceGUI:
     def send_secure_message(self):
         try:
             plaintext = self.entry_msg.get().encode()
+            ip_bob = self.entry_ip.get()
             self.log_area.delete(1.0, tk.END)
             self.log("--- MEMULAI PROSES PENGIRIMAN ---")
 
@@ -76,19 +86,21 @@ class AliceGUI:
 
             # 6. Socket Sending
             payload = {
+                "source_ip": self.own_ip,
+                "destination_ip": ip_bob,
                 "ciphertext": base64.b64encode(ciphertext).decode(),
                 "iv": base64.b64encode(iv).decode(),
                 "encrypted_key": base64.b64encode(enc_key).decode(),
                 "hash": base64.b64encode(msg_hash).decode(),
                 "signature": base64.b64encode(sig).decode()
             }
-            
+
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect(('127.0.0.1', 5005))
+                s.connect((ip_bob, 5005))
                 s.sendall(json.dumps(payload).encode())
-            
+
             self.log("\n[SUCCESS] Payload berhasil dikirim ke IP Bob!")
-            
+
         except Exception as e:
             self.log(f"\n[ERROR] {str(e)}")
 
